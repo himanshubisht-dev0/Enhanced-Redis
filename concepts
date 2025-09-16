@@ -8,4 +8,8 @@
 8.Command Processing and Response Formatting
 9.Singleton Pattern ->allow only one instance of database to the application because it will centralise sigleton data management
 10.Bitwise Operators '|='
-11.std:: 
+11.std::
+
+RedisServer class
+RedisDatabse class
+RedisCommandHandler class
