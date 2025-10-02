@@ -6,7 +6,11 @@
 int main(int argc,char* argv[]){
    int port =6379;//default port
    if(argc>=2)port=std::stoi(argv[1]);//checking if server wants the user wants to start server or not.if not we use default.
-   
+   if(RedisDatabase::getInstance().load("dump.my_rdb")){
+    std::cout<<"Database loaded from dump.my_rdb\n";
+   }else{
+    std::cout<<"No dump found or load failed; starting with an empty database.\n";
+   }
    RedisServer server(port);
 
    //background persistance: dump the database every 300 seconds.(5*60 save database)

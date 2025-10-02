@@ -16,14 +16,12 @@ public:
 
     //Key/value operations
     void set(const std::string & key,const std::string& value);
-    bool get(const std::string& key,const std::string& value);
+    bool get(const std::string& key,std::string& value);
     std::vector<std::string>keys();
 
     std::string type(const std::string& key);
     bool del(const std::string&key);
-    //expire 
     bool expire(const std::string& key,int seconds);
-    //rename
     bool rename(const std::string& oldkey,const std::string& newkey);
 
     //Persistent: Dump /load the database from a file.
