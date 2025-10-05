@@ -23,10 +23,21 @@ public:
     bool del(const std::string&key);
     bool expire(const std::string& key,int seconds);
     bool rename(const std::string& oldkey,const std::string& newkey);
-
+    //List operations
+    ssize_t llen(const std::string&key);
+    void lpush(const std::string& key,const std::string& value);
+    void rpush(const std::string& key,const std::string& value);
+    void rpop(const std::string& key,std::string& value);
+    void lpop(const std::string& key,std::string& value);
+    int lrem(const std::string& key,int count ,std::string& value);
+    bool lindex(const std::string& key,int index ,const std::string& value);
+    bool lset(const std::string& key,int index ,const std::string& value);//update element in given position
     //Persistent: Dump /load the database from a file.
     bool dump(const std::string& filename);
     bool load(const std::string& filename);
+
+    
+
 private:
     RedisDatabase()=default;
     ~RedisDatabase()=default;
