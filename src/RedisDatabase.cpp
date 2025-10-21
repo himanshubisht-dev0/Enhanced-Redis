@@ -203,7 +203,7 @@ bool RedisDatabase::lindex(const std::string& key,int index ,std::string& value)
         if(index<0){
             index=lst.size()+index;
         }
-        if(index<0 || static_cast<ssize_t>(index)>=lst.size())
+        if(index<0 || index>=static_cast<int>(lst.size()))
             return false;
         value=lst[index];
         return true;
@@ -220,7 +220,7 @@ bool RedisDatabase::lset(const std::string& key,int index ,const std::string& va
     if(index<0){
         index=lst.size()+index;
     }
-    if(index<0 || static_cast<ssize_t>(index)>=lst.size())
+    if(index<0 || index>=static_cast<int>(lst.size()))
         return false;
     lst[index]=value;
     return true;

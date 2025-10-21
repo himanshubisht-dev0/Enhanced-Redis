@@ -1,7 +1,12 @@
+K sport_car BMW
+K session:1 data
 K Name Himanshu
-K city Dehradun
 K wweather sunny
-L fruits apple banana orange
+K city Dehradun
+K foo bar
+L a b
+L mylist * new value valu z
 L colors red green blue
-H user:100
+L fruits apple banana orange
 H user:200
+H user:100
