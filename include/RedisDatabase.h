@@ -34,7 +34,8 @@ public:
     bool lset(const std::string& key,int index ,const std::string& value);//update element in given position
 
     //Hash operations
-    
+    bool hset(const std::string& key,const std::string &field,const std::string& value);
+
 
     //Persistent: Dump /load the database from a file.
     bool dump(const std::string& filename);
