@@ -35,6 +35,15 @@ public:
 
     //Hash operations
     bool hset(const std::string& key,const std::string &field,const std::string& value);
+    bool hget(const std::string& key,const std::string& field,std::string& value);
+    bool hexists(const std::string& key,const std::string& field);
+    int hdel(const std::string& key,const std::string& field);
+    std::unordered_map<std::string,std::string>hgetall(const std::string&key);
+    std::vector<std::string>hkeys(const std::string& key);
+    std::vector<std::string>hvals(const std::string& key);
+    ssize_t hlen(const std::string& key);
+    bool hmset(const std::string& key,const std::vector<std::pair<std::string,std::string>>& fieldValues);
+    
 
 
     //Persistent: Dump /load the database from a file.
