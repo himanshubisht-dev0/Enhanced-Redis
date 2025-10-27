@@ -22,8 +22,10 @@ public:
     std::string type(const std::string& key);
     bool del(const std::string&key);
     bool expire(const std::string& key,int seconds);
+    void purgeExpired();
     bool rename(const std::string& oldkey,const std::string& newkey);
     //List operations
+    std::vector<std::string>lget(const std::string& key);
     ssize_t llen(const std::string&key);
     void lpush(const std::string& key,const std::string& value);
     void rpush(const std::string& key,const std::string& value);

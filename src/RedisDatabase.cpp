@@ -24,6 +24,7 @@ void RedisDatabase::set(const std::string & key,const std::string& value){
 }
 bool RedisDatabase::get(const std::string& key,std::string& value){
     std::lock_guard<std::mutex>lock(db_mutex);
+    purgeExpired();
     auto it=kv_store.find(key);
     if(it!=kv_store.end()){
         value=it->second;
@@ -33,6 +34,7 @@ bool RedisDatabase::get(const std::string& key,std::string& value){
 }
 std::vector<std::string>RedisDatabase::keys(){
     std::lock_guard<std::mutex>lock(db_mutex);
+    purgeExpired();
     std::vector<std::string>result;
     for(const auto&pair:kv_store){
         result.push_back(pair.first);
@@ -47,6 +49,7 @@ std::vector<std::string>RedisDatabase::keys(){
 }
 std::string RedisDatabase::type(const std::string& key){
     std::lock_guard<std::mutex>lock(db_mutex);
+    purgeExpired();
     if(kv_store.find(key)!=kv_store.end()){
         return "string";
     }
@@ -62,6 +65,7 @@ std::string RedisDatabase::type(const std::string& key){
 }
 bool RedisDatabase::del(const std::string&key){
     std::lock_guard<std::mutex>lock(db_mutex);
+    purgeExpired();
     bool erased=false;
     erased |=kv_store.erase(key)>0;
     erased |=list_store.erase(key)>0;
@@ -70,13 +74,31 @@ bool RedisDatabase::del(const std::string&key){
 }
 bool RedisDatabase::expire(const std::string& key,int seconds){
     std::lock_guard<std::mutex>lock(db_mutex);
+    purgeExpired();
     bool exists=(kv_store.find(key)!=kv_store.end()) || (list_store.find(key)!=list_store.end()) || (hash_store.find(key)!=hash_store.end());
     if(!exists)return false;
     expiry_map[key]=std::chrono::steady_clock::now() + std::chrono::seconds(seconds);
     return  true;
 }
+void RedisDatabase::purgeExpired(){
+    std::lock_guard<std::mutex>lock(db_mutex);
+    auto now=std::chrono::steady_clock::now();//check for time
+    for(auto it=expiry_map.begin();it!=expiry_map.end();){
+        if(it->second < now){
+            //remove from all stores
+            const std::string& key=it->first;
+            kv_store.erase(key);
+            list_store.erase(key);
+            hash_store.erase(key);
+            it=expiry_map.erase(it);
+        }else{
+            ++it;
+        }
+    }
+}
 bool RedisDatabase::rename(const std::string& oldKey,const std::string& newKey){
     std::lock_guard<std::mutex>lock(db_mutex);
+    purgeExpired();
     bool found=false;
     auto itKv=kv_store.find(oldKey);
     if(itKv!=kv_store.end()){
@@ -110,6 +132,14 @@ bool RedisDatabase::rename(const std::string& oldKey,const std::string& newKey){
 }
 
 //List operations
+std::vector<std::string>RedisDatabase::lget(const std::string& key){
+    std::lock_guard<std::mutex>lock(db_mutex);
+    auto it=list_store.find(key);
+    if(it!=list_store.end()){
+        return it->second;
+    }
+    return {};
+}
 ssize_t RedisDatabase::llen(const std::string&key){//check number of items and return t
     std::lock_guard<std::mutex>lock(db_mutex);
     auto it=list_store.find(key);
