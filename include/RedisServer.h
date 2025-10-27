@@ -3,6 +3,8 @@
 
 #include<string>//signal handling
 #include<atomic>
+#include "D:\\projects\\Enhanced-Redis\\include\\ThreadPool.h" // Include ThreadPool header
+
 class RedisServer{
 public:
     RedisServer(int port);
@@ -12,6 +14,8 @@ private:
     int port;
     int server_socket;
     std::atomic<bool> running;
+    ThreadPool thread_pool; // Add a ThreadPool member
+
     //Setup signal handlers for graceful shutdown (crtl +c)
     void setupSignalHandler();
 

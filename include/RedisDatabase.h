@@ -6,6 +6,7 @@
 #include<unordered_map>
 #include<vector>
 #include<chrono>
+#include "D:\\projects\\Enhanced-Redis\\include\\AdaptivePredictiveCache.h"
 class RedisDatabase {
 public:
     //Get the singleton instance 
@@ -15,14 +16,14 @@ public:
     bool flushAll();
 
     //Key/value operations
-    void set(const std::string & key,const std::string& value);
+    void set(const std::string & key,const std::string& value, double ttl_seconds = 0);
     bool get(const std::string& key,std::string& value);
     std::vector<std::string>keys();
 
     std::string type(const std::string& key);
     bool del(const std::string&key);
     bool expire(const std::string& key,int seconds);
-    void purgeExpired();
+    void checkAndEvict(); // New method for cache eviction
     bool rename(const std::string& oldkey,const std::string& newkey);
     //List operations
     std::vector<std::string>lget(const std::string& key);
@@ -65,7 +66,8 @@ private:
     std::unordered_map<std::string,std::vector<std::string>> list_store;
     std::unordered_map<std::string,std::unordered_map<std::string,std::string>> hash_store;//hash of key-value pairs
 
-    std::unordered_map<std::string,std::chrono::steady_clock::time_point>expiry_map;
+    AdaptivePredictiveCache predictive_cache; // The new predictive cache
+    size_t max_cache_size = 10000; // Example max size for eviction trigger
     
 };
 
