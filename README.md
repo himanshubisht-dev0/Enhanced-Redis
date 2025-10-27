@@ -1,4 +1,4 @@
-# SmartCacheDB (Intelligent Redis Clone)
+# SmartCacheDB — Redis Re-imagined with Adaptive Predictive Caching
 
 A high-performance, AI-inspired Redis-compatible in-memory data store written in C++. SmartCacheDB features an Adaptive Predictive Cache (APC) system that predicts which keys should be retained or evicted based on access patterns, without any explicit machine learning training. It supports strings, lists, and hashes, full Redis Serialization Protocol (RESP) parsing, multi-client concurrency via a thread pool, and periodic disk persistence.
 
